@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <title>借阅信息页面</title>
+    <style>
+        .my-ctl{
+            margin:5px 5px 5px 0px;
+
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+
+    <form class="form-inline">
+
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">借阅编号</div>
+            </div>
+            <input type="text" class="form-control" style="width:150px;"  v-model="query.l_id">
+        </div>
+
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">读者账号</div>
+            </div>
+            <input type="text" class="form-control" style="width:150px;" v-model="query.r_id">
+        </div>
+
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">读者名称</div>
+            </div>
+            <input type="text" class="form-control" style="width:150px;" v-model="query.r_name">
+        </div>
+
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">图书编号</div>
+            </div>
+            <input type="text" class="form-control" style="width:150px;" v-model="query.b_id">
+        </div>
+
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">图书名称</div>
+            </div>
+            <input type="text" class="form-control" style="width:150px;" v-model="query.b_name">
+        </div>
+
+
+
+        <button type="button" class="btn btn-primary" @click="getLibborrowList" >查询</button>
+    </form>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>借阅编号</th>
+            <th>读者账号</th>
+            <th>读者名称</th>
+            <th>图书编号</th>
+            <th>图书名称</th>
+            <th>借阅日期</th>
+            <th>还书日期</th>
+            <th>借阅状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in page.list" :key="item.l_id">
+            <td>{{item.l_id}}</td>
+            <td>{{item.r_id}}</td>
+            <td>{{item.r_name}}</td>
+            <td>{{item.b_id}}</td>
+            <td>{{item.b_name}}</td>
+            <td>{{item.borrowDate}}</td>
+            <td>{{item.deadline}}</td>
+            <td>{{item.state==1?'已还':'未还'}}</td>
+            <td>
+                <button type="button" class="btn btn-link"  @click="openUpd(item)" >修改</button>
+                <button type="button" class="btn btn-link"  @click="execDel(item)" >删除</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination" style="display: flex;align-items: center;">
+            <li class="page-item" style="margin-right:10px;">
+
+                <div class="input-group my-ctl">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">每页</div>
+                    </div>
+                    <select class="custom-select" style="width:70px;" v-model="query.pageSize" @change="goPage(1)">
+                        <option v-for="pageSize in [2,3,5,10]" :value="pageSize">{{pageSize}}</option>
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text">条记录</div>
+                    </div>
+                </div>
+
+            </li>
+            <li class="page-item"><a class="page-link" href="#" @click.prevent="goPage(1)" >首页</a></li>
+            <li class="page-item"><a class="page-link" href="#" @click.prevent="goPage(page.pre)">上页</a></li>
+            <li class="page-item"><a class="page-link" href="#" @click.prevent="goPage(page.next)" >下页</a></li>
+            <li class="page-item"><a class="page-link" href="#" @click.prevent="goPage(page.last)">尾页</a></li>
+
+            <li class="page-item" style="margin-left:10px;">
+                当前第 <input style="border:1px solid #EEEEEE;width:30px;text-align: center;margin:0px 3px;" type="text" v-model="query.pageNum" @blur="goPage(query.pageNum)" />页{{page.size}}条记录，共{{page.pages}}页条{{page.total}}记录。
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 修改窗口 -->
+    <div id="upd-win" style="display:none;padding:15px;">
+
+        <form>
+            <div class="form-group">
+                <label>借阅编号：</label>
+                <input type="text" class="form-control" v-model="updData.l_id" >
+            </div>
+            <div class="form-group">
+                <label>读者账号：</label>
+                <input type="text" class="form-control" v-model="updData.r_id" >
+            </div>
+            <div class="form-group">
+                <label>读者名称：</label>
+                <input type="text" class="form-control" v-model="updData.r_name" >
+            </div>
+            <div class="form-group">
+                <label>图书编号：</label>
+                <input type="text" class="form-control" v-model="updData.b_id" >
+            </div>
+            <div class="form-group">
+                <label>图书名称：</label>
+                <input type="text" class="form-control" v-model="updData.b_name" >
+            </div>
+            <div class="form-group">
+                <label>借阅日期：</label>
+                <input type="date" class="form-control" v-model="updData.borrowDate" >
+            </div>
+            <div class="form-group">
+                <label>还书日期：</label>
+                <input type="date" class="form-control" v-model="updData.deadline" >
+            </div>
+            <div class="form-group">
+                <label>借阅状态：</label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline1-upd" name="yes" class="custom-control-input" value="1" v-model="updData.state">
+                    <label class="custom-control-label" for="customRadioInline1-upd">已还</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline2-upd" name="no" class="custom-control-input" value="2" v-model="updData.state">
+                    <label class="custom-control-label" for="customRadioInline2-upd">未还</label>
+                </div>
+            </div>
+
+
+            <button type="button" class="btn btn-primary"  @click="execUpd" >提交</button>
+        </form>
+
+
+    </div>
+
+</div>
+
+<script src="js/jquery-3.6.0.slim.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/vue.global.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/my-axios.js"></script>
+<script src="layer/layer.js"></script>
+
+<script>
+
+    //定义vue应用配置
+    const app = {
+        //data函数专门用来定义数据
+        data() {
+            return {
+
+                //查询条件
+                query:{
+                    pageNum:1,
+                    pageSize:5,
+                    l_id:'',
+                    r_id:'',
+                    r_name:'',
+                    b_id:'',
+                    b_name:''
+                },
+
+
+                page:{},//分页对象
+
+                libList:[],
+                addIdx:null,//新增窗口标识
+                updIdx:null,//修改窗口标识
+                updData:{//修改数据
+                    l_id:'',
+                    r_id:'',
+                    r_name:'',
+                    b_id:'',
+                    b_name:'',
+                    borrowDate:'',
+                    deadline:'',
+                    state:''
+                },
+
+            };
+        },
+        //定义方法
+        methods: {
+
+            //分页跳转
+            goPage(pageNum,pageSize){
+                if(pageNum){
+                    this.query.pageNum = pageNum;
+                    if(pageSize){
+                        this.query.pageSize = pageSize;
+                    }
+                }else{
+                    this.query.pageNum = 1;
+                }
+
+                this.getLibborrowList()();
+            },
+
+            //获取数据
+            getLibborrowList(){
+                //向服务端接口http://localhost:8888/jd_demo_server_war_exploded/lib/libList，发出get请求
+
+                const loadIdx = layer.load(0,{
+                    success:()=>{
+
+                        ///加载提示
+                        myAxios.get('/lib/libList',{params:this.query}).then((response) => {
+                            layer.close(loadIdx);
+                            //this.libList= response.data.data;
+                            this.page = response.data.data;
+                            this.query.pageNum = this.page.current;//用服务端数据校正客户端数据参数
+                            this.query.pageSize = this.page.pageSize;//用服务端数据校正客户端数据参数
+                        });
+                    }
+                });
+
+            },
+            //打开修改窗口的函数
+            openUpd(item){
+                this.updData = {...item};//js解构 ,在这里作用：产生一个item对象的副本
+                this.updIdx = layer.open({
+                    type: 1,
+                    title: '修改借阅信息',
+                    area: ['800px', '600px'],
+                    content: $('#upd-win')
+                });
+            },
+            //执行修改
+            execUpd(){
+                const idx = layer.load();
+                myAxios.post('/lib/libDoUpd',this.updData).then(res=>{
+                    layer.close(idx);
+                    if(res.data.success){
+                        //this.getLibborrowList();
+                        this.goPage(this.page.current);
+                        layer.close(this.updIdx);
+                        layer.msg('修改借阅信息成功！',{icon:1});
+                    }
+                }).catch(err=>{
+                    layer.close(idx);
+                    layer.msg('修改借阅信息失败！',{icon:2});
+                });
+            },
+            //执行删除
+            execDel(item){
+                const idx = layer.load();
+                myAxios.post('/lib/libDoDel',item).then(res=>{
+                    layer.close(idx);
+                    if(res.data.success){
+                        //this.getLibborrowList();
+                        this.goPage(this.page.current);
+                        layer.close(this.updIdx);
+                        layer.msg('删除借阅信息成功！',{icon:1});
+                    }else{
+                        layer.msg(res.data.message,{icon:2});
+                    }
+                }).catch(err=>{
+                    layer.close(idx);
+                    layer.msg('删除借阅信息失败！',{icon:2});
+                });
+            }
+        },
+
+        //定义回调方法：mounted 该方法在页面渲染完成立即执行
+        mounted() {
+            //this.getLibborrowList();
+            this.goPage(1);
+        }
+    };
+
+    Vue.createApp(app).mount('#app')
+
+</script>
+
+
+</body>
+</html>

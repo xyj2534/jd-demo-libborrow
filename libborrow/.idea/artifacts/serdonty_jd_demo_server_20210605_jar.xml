@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="serdonty-jd-demo-server-20210605:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/serdonty_jd_demo_server_20210605_jar</output-path>
+    <root id="archive" name="serdonty-jd-demo-server-20210605_jar.jar">
+      <element id="archive" name="serdonty-jd-demo-server-20210605.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+ 
+
+    <div id="app" style="border:1px solid red;width:400px;height:300px;margin-left:100px;">
+
+        <input type="text" v-model="info" />
+        {{info}}
+
+        <button @click="fun" class="btn btn-success">按钮</button>
+
+
+    </div>
+
+
+    
+
+    
+    <script src="js/jquery.slim.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/vue.global.js"></script>
+    <script src="js/axios.min.js"></script>
+
+    <script>
+        //定义vue应用配置
+        const app = {
+            //data函数专门用来定义数据
+            data(){
+                return {
+                    info:'abc',//定义一个名称为info数据
+                };
+            },
+
+            //定义方法
+            methods:{
+                fun(){
+                   this.info="这是一个测试" 
+                }
+            }
+        };
+
+        Vue.createApp(app).mount('#app')
+
+    </script>
+    
+
+   
+  </body>
+</html>
