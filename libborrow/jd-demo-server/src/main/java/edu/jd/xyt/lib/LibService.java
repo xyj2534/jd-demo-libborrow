@@ -59,7 +59,7 @@ public class LibService {
 
         }catch(Exception e){
             sess.rollback();
-            throw new RuntimeException("新增借阅信息失败！",e);
+            throw new RuntimeException("修改借阅信息失败！",e);
         }finally {
             sess.close();
         }

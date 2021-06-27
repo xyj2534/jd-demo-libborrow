@@ -13,7 +13,7 @@ public interface LibDao {
 
     List<Libborrow> findLibborrowList(QueryDto queryDto);
 
-    @Update("update 借阅 set l_id = #{l_id},r_id = #{r_id},r_name = #{r_name},b_id = #{b_id},b_name = #{b_name},borrowDate = #{borrowDate},deadline = #{deadline},state = #{state} where L_id=#{l_id}")
+    @Update("update 借阅 set borrowDate = #{borrowDate},deadline = #{deadline},state = #{state} where L_id=#{l_id}")
     void updateLibborrow(LibborrowDto dto);
 
     @Delete("delete from 借阅 where L_id = #{l_id}")

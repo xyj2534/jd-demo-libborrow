@@ -9,6 +9,8 @@ public class QueryDto extends paraParam {
     private String R_name;
     private String B_id;
     private String B_name;
+    private String start_borrowDate;
+    private String end_borrowDate;
 
     public String getL_id() {
         return L_id;
@@ -48,5 +50,21 @@ public class QueryDto extends paraParam {
 
     public void setB_name(String b_name) {
         B_name = b_name;
+    }
+
+    public String getStart_borrowDate() {
+        return start_borrowDate;
+    }
+
+    public void setStart_borrowDate(String start_borrowDate) {
+        this.start_borrowDate = start_borrowDate;
+    }
+
+    public String getEnd_borrowDate() {
+        return end_borrowDate;
+    }
+
+    public void setEnd_borrowDate(String end_borrowDate) {
+        this.end_borrowDate = end_borrowDate;
     }
 }

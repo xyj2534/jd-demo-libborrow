@@ -19,6 +19,12 @@
             <if test="b_name != null and b_name != '' ">
                 and b_name like concat('%',#{b_name},'%')
             </if>
+            <if test="start_borrowDate != null and start_borrowDate != '' ">
+                and borrowDate &gt;= #{start_borrowDate}
+            </if>
+            <if test="end_borrowDate != null and end_borrowDate != '' ">
+            and borrowDate &lt;= #{end_borrowDate}
+            </if>
         </where>
     </select>
 </mapper>

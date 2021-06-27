@@ -74,6 +74,9 @@ public class LibAPI extends HttpServlet {
         queryDto.setR_name(request.getParameter("r_name"));
         queryDto.setB_id(request.getParameter("b_id"));
         queryDto.setB_name(request.getParameter("b_name"));
+        queryDto.setStart_borrowDate(request.getParameter("start_borrowDate"));
+        queryDto.setEnd_borrowDate(request.getParameter("end_borrowDate"));
+
 
 
         //创建业务模型对象（服务对象/Service对象），通过业务对象执行业务方法

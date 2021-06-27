@@ -27,37 +27,47 @@
             <div class="input-group-prepend">
                 <div class="input-group-text">借阅编号</div>
             </div>
-            <input type="text" class="form-control" style="width:150px;"  v-model="query.l_id">
+            <input type="text" class="form-control" style="width:90px;"  v-model="query.l_id">
         </div>
 
         <div class="input-group my-ctl">
             <div class="input-group-prepend">
                 <div class="input-group-text">读者账号</div>
             </div>
-            <input type="text" class="form-control" style="width:150px;" v-model="query.r_id">
+            <input type="text" class="form-control" style="width:90px;" v-model="query.r_id">
         </div>
 
         <div class="input-group my-ctl">
             <div class="input-group-prepend">
                 <div class="input-group-text">读者名称</div>
             </div>
-            <input type="text" class="form-control" style="width:150px;" v-model="query.r_name">
+            <input type="text" class="form-control" style="width:90px;" v-model="query.r_name">
         </div>
 
         <div class="input-group my-ctl">
             <div class="input-group-prepend">
                 <div class="input-group-text">图书编号</div>
             </div>
-            <input type="text" class="form-control" style="width:150px;" v-model="query.b_id">
+            <input type="text" class="form-control" style="width:90px;" v-model="query.b_id">
         </div>
 
         <div class="input-group my-ctl">
             <div class="input-group-prepend">
                 <div class="input-group-text">图书名称</div>
             </div>
-            <input type="text" class="form-control" style="width:150px;" v-model="query.b_name">
+            <input type="text" class="form-control" style="width:90px;" v-model="query.b_name">
         </div>
 
+        <div class="input-group my-ctl">
+            <div class="input-group-prepend">
+                <div class="input-group-text">借阅日期</div>
+            </div>
+            <input type="date" class="form-control" style="width:175px;" v-model="query.start_borrowDate">
+            <div class="input-group-prepend input-group-append">
+                <div class="input-group-text">至</div>
+            </div>
+            <input type="date" class="form-control" style="width:175px;" v-model="query.end_borrowDate">
+        </div>
 
 
         <button type="button" class="btn btn-primary" @click="getLibborrowList" >查询</button>
@@ -128,26 +138,13 @@
     <div id="upd-win" style="display:none;padding:15px;">
 
         <form>
-            <div class="form-group">
-                <label>借阅编号：</label>
-                <input type="text" class="form-control" v-model="updData.l_id" >
-            </div>
-            <div class="form-group">
-                <label>读者账号：</label>
-                <input type="text" class="form-control" v-model="updData.r_id" >
-            </div>
-            <div class="form-group">
-                <label>读者名称：</label>
-                <input type="text" class="form-control" v-model="updData.r_name" >
-            </div>
-            <div class="form-group">
-                <label>图书编号：</label>
-                <input type="text" class="form-control" v-model="updData.b_id" >
-            </div>
-            <div class="form-group">
-                <label>图书名称：</label>
-                <input type="text" class="form-control" v-model="updData.b_name" >
-            </div>
+
+
+<!--            <div class="form-group">-->
+<!--                <label>借阅编号：</label>-->
+<!--                <input type="text" class="form-control" v-model="updData.l_id" >-->
+<!--            </div>-->
+
             <div class="form-group">
                 <label>借阅日期：</label>
                 <input type="date" class="form-control" v-model="updData.borrowDate" >
@@ -200,7 +197,10 @@
                     r_id:'',
                     r_name:'',
                     b_id:'',
-                    b_name:''
+                    b_name:'',
+                    start_borrowDate:'',
+                    end_borrowDate:''
+
                 },
 
 
@@ -210,11 +210,7 @@
                 addIdx:null,//新增窗口标识
                 updIdx:null,//修改窗口标识
                 updData:{//修改数据
-                    l_id:'',
-                    r_id:'',
-                    r_name:'',
-                    b_id:'',
-                    b_name:'',
+                    // l_id:'',
                     borrowDate:'',
                     deadline:'',
                     state:''
@@ -236,7 +232,7 @@
                     this.query.pageNum = 1;
                 }
 
-                this.getLibborrowList()();
+                this.getLibborrowList();
             },
 
             //获取数据
