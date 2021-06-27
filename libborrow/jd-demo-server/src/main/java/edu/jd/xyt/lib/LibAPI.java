@@ -15,7 +15,8 @@ import java.util.Map;
 @WebServlet({
         "/lib/libList",
         "/lib/libDoUpd",
-        "/lib/libDoDel"
+        "/lib/libDoDel",
+        "/lib/libDoAdd"
 })
 public class LibAPI extends HttpServlet {
 
@@ -24,12 +25,22 @@ public class LibAPI extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String path = request.getServletPath();
 
+        if("/lib/libDoAdd".equals(path)){
+
+            LibborrowDto dto = Utils.getBeanFromRequest(LibborrowDto.class,request);
+            //System.out.println("dto:"+dto);
+            libService.addLibborrow(dto);
+
+            Utils.outJson(response, Result.success());
+
+        }
+
         if("/lib/libDoUpd".equals(path)){
 
             try {
                 LibborrowDto dto = Utils.getBeanFromRequest(LibborrowDto.class,request);
                 //System.out.println("dto:"+dto);
-                libService.modifyTeacher(dto);
+                libService.modifyLibborrow(dto);
 
                 Utils.outJson(response, Result.success());
             } catch (IOException e) {
@@ -44,7 +55,7 @@ public class LibAPI extends HttpServlet {
             try {
                 LibborrowDto dto = Utils.getBeanFromRequest(LibborrowDto.class,request);
                 //System.out.println("dto:"+dto);
-                libService.removeTeacher(dto);
+                libService.removeLibborrow(dto);
 
                 Utils.outJson(response, Result.success());
             } catch (Exception e) {

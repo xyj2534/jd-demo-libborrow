@@ -73,7 +73,6 @@
         <button type="button" class="btn btn-primary" @click="getLibborrowList" >查询</button>
     </form>
 
-
     <table class="table">
         <thead>
         <tr>
@@ -138,13 +137,6 @@
     <div id="upd-win" style="display:none;padding:15px;">
 
         <form>
-
-
-<!--            <div class="form-group">-->
-<!--                <label>借阅编号：</label>-->
-<!--                <input type="text" class="form-control" v-model="updData.l_id" >-->
-<!--            </div>-->
-
             <div class="form-group">
                 <label>借阅日期：</label>
                 <input type="date" class="form-control" v-model="updData.borrowDate" >
@@ -164,7 +156,6 @@
                     <label class="custom-control-label" for="customRadioInline2-upd">未还</label>
                 </div>
             </div>
-
 
             <button type="button" class="btn btn-primary"  @click="execUpd" >提交</button>
         </form>

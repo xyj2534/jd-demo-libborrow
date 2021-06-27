@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import edu.jd.xyt.common.Utils;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +46,30 @@ public class LibService {
         }finally {
             sess.close();
         }
+    }
+    public void addLibborrow(LibborrowDto dto) {
 
+        SqlSession sess = Utils.openSession();
+        try{
+            LibDao dao = sess.getMapper(LibDao.class);
 
-
+            //MM00n  自动构造ID
+            Calendar cal = Calendar.getInstance();//获得当前日期
+            int month = cal.get(Calendar.MONTH)+1;//cal.get(Calendar.MONTH) 获取的月份从0开始
+            String mon = month<10?("0"+month):(""+month);
+            String newNum = dao.findLibborrowNewNum(mon);
+            dto.setL_id(mon+newNum);
+            dao.insertLibborrow(dto);
+            sess.commit();
+        }catch(Exception e){
+            sess.rollback();
+            throw new RuntimeException("新增教师信息失败！",e);
+        }finally {
+            sess.close();
+        }
     }
 
-    public void modifyTeacher(LibborrowDto dto) {
+    public void modifyLibborrow(LibborrowDto dto) {
         SqlSession sess = Utils.openSession();
         try{
             LibDao dao = sess.getMapper(LibDao.class);
@@ -65,7 +84,7 @@ public class LibService {
         }
     }
 
-    public void removeTeacher(LibborrowDto dto) {
+    public void removeLibborrow(LibborrowDto dto) {
         SqlSession sess = Utils.openSession();
         try{
             LibDao dao = sess.getMapper(LibDao.class);
